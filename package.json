@@ -1,0 +1,15 @@
+{
+  "name": "smodg",
+  "version": "1.0.0",
+  "description": "Generate basic Sequelize models from TypeScript declaration files",
+  "main": "index.js",
+  "scripts": {
+    "test": "jest"
+  },
+  "keywords": [
+    "sequelize",
+    "typescript"
+  ],
+  "author": "nealwp",
+  "license": "ISC"
+}
