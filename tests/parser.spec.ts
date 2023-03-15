@@ -1,4 +1,4 @@
-import { generateModel, readTokensFromSource, parseTypeObjects } from '../src/parser'
+import { generateModel, readTokensFromSource, parseTypeObjects, snakeCase } from '../src/parser'
 
 describe('parser', () => {
 
@@ -82,6 +82,28 @@ describe('parser', () => {
             const result = generateModel(fileContent)
 
             expect(result).toEqual(expectedOutput)
+        })
+        test('should handle a multiple properties', () => {
+            const fileContent = `export type SmallTest = {
+                name: string;
+                anotherName: string;
+            }`
+
+            const expectedOutput = `@Column({ field: 'name', type: Sequelize.STRING })\nname!: string\n\n@Column({ field: 'another_name', type: Sequelize.STRING })\nanotherName!: string\n\n`
+
+            const result = generateModel(fileContent)
+
+            expect(result).toEqual(expectedOutput)
+        })
+    })
+
+
+    describe('snakeCase', () => {
+        test('should convert a camelCase string to snake_case', () => {
+            const text = 'thisIsCamelCase'
+            const expected = 'this_is_camel_case'
+            const result = snakeCase(text)
+            expect(result).toEqual(expected)
         })
     })
 })

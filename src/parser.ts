@@ -6,7 +6,7 @@ const generateModel = (fileContent: string) => {
 
     let modelString = ''
     types.forEach(obj => {
-        modelString = `${modelString}@Column({ field: '${obj.key}', type: Sequelize.${getSequelizeType(obj.type)} })\n${obj.key}!: ${obj.type}\n\n`
+        modelString = `${modelString}@Column({ field: '${snakeCase(obj.key)}', type: Sequelize.${getSequelizeType(obj.type)} })\n${obj.key}!: ${obj.type}\n\n`
     })
 
     return modelString
@@ -69,4 +69,8 @@ const getSequelizeType = (jsType: string) => {
     }
 }
 
-export { generateModel, readTokensFromSource, parseTypeObjects }
+const snakeCase = (str: string) => {
+    return str.replace(/[A-Z]/g, (letter) => `_${letter.toLowerCase()}`);
+}
+
+export { generateModel, readTokensFromSource, parseTypeObjects, snakeCase }
