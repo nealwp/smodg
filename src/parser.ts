@@ -32,7 +32,6 @@ const readTokensFromSource = (sourceCode: string) => {
             ts.forEachChild(node, recur);
         }
     });
-    console.log(tokens)
     return tokens;
 }
 
