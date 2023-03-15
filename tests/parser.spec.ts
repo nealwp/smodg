@@ -39,7 +39,7 @@ describe('parser', () => {
                 { kind: "CloseBraceToken", text: "}" }
             ]
 
-            const expectedOutput = [{key: "name", type: "string"}]
+            const expectedOutput = { tableName: 'SmallTest', types: [{key: "name", type: "string"}] }
             const typeObjects = parseTypeObjects(tokens)
             expect(typeObjects).toEqual(expectedOutput)
         })
@@ -62,10 +62,13 @@ describe('parser', () => {
                 { kind: "CloseBraceToken", text: "}" }
             ]
 
-            const expectedOutput = [
-                {key: "name", type: "string"},
-                {key: "anotherName", type: "string"}
-            ]
+            const expectedOutput = {
+                tableName: 'SmallTest',
+                types: [
+                    {key: "name", type: "string"},
+                    {key: "anotherName", type: "string"}
+                ]
+            }
             const typeObjects = parseTypeObjects(tokens)
             expect(typeObjects).toEqual(expectedOutput)
         })
@@ -77,7 +80,7 @@ describe('parser', () => {
                 name: string;
             }`
 
-            const expectedOutput = `@Column({ field: 'name', type: Sequelize.STRING })\nname!: string\n\n`
+            const expectedOutput = `@Table({tableName: 'small_test'})\nclass SmallTest extends Model implements SmallTestAttributes {\n\t@Column({ field: 'name', type: Sequelize.STRING })\n\tname!: string\n\n}\n`
 
             const result = generateModel(fileContent)
 
@@ -89,7 +92,7 @@ describe('parser', () => {
                 anotherName: string;
             }`
 
-            const expectedOutput = `@Column({ field: 'name', type: Sequelize.STRING })\nname!: string\n\n@Column({ field: 'another_name', type: Sequelize.STRING })\nanotherName!: string\n\n`
+            const expectedOutput = `@Table({tableName: 'small_test'})\nclass SmallTest extends Model implements SmallTestAttributes {\n\t@Column({ field: 'name', type: Sequelize.STRING })\n\tname!: string\n\n\t@Column({ field: 'another_name', type: Sequelize.STRING })\n\tanotherName!: string\n\n}\n`
 
             const result = generateModel(fileContent)
 

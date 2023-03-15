@@ -2,14 +2,14 @@ import ts from 'typescript';
 
 const generateModel = (fileContent: string) => {
     const tokens = readTokensFromSource(fileContent);
-    const types = parseTypeObjects(tokens)
+    const { tableName, types } = parseTypeObjects(tokens)
 
-    let modelString = ''
+    let modelString = `@Table({tableName: '${snakeCase(tableName)}'})\nclass ${tableName} extends Model implements ${tableName}Attributes {\n`
     types.forEach(obj => {
-        modelString = `${modelString}@Column({ field: '${snakeCase(obj.key)}', type: Sequelize.${getSequelizeType(obj.type)} })\n${obj.key}!: ${obj.type}\n\n`
+        modelString = `${modelString}\t@Column({ field: '${snakeCase(obj.key)}', type: Sequelize.${getSequelizeType(obj.type)} })\n\t${obj.key}!: ${obj.type}\n\n`
     })
 
-    return modelString
+    return modelString + '}\n'
 }
 
 
@@ -36,12 +36,16 @@ const readTokensFromSource = (sourceCode: string) => {
 }
 
 const parseTypeObjects = (tokens: { text: string, kind: string }[]) => {
-    const result: { key: string, type: string }[] = [];
+    const types: { key: string, type: string }[] = [];
     let skipIdentifier = true;
+    let tableName = ''
 
     for (const token of tokens) {
         if (skipIdentifier) {
             if (token.kind === 'Identifier') {
+                if (!tableName) {
+                    tableName = token.text;
+                }
                 skipIdentifier = false;
             }
             continue;
@@ -51,13 +55,13 @@ const parseTypeObjects = (tokens: { text: string, kind: string }[]) => {
             const typeToken = tokens[tokens.indexOf(token) + 1];
             const propertyToken = tokens[tokens.indexOf(token) - 1];
             if (typeToken.kind === 'StringKeyword') {
-                result.push({ key: propertyToken.text, type: typeToken.text });
+                types.push({ key: propertyToken.text, type: typeToken.text });
             }
             skipIdentifier = true;
         }
     }
 
-    return result;
+    return {tableName, types};
 }
 
 const getSequelizeType = (jsType: string) => {
