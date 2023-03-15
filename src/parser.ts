@@ -38,25 +38,25 @@ const readTokensFromSource = (sourceCode: string) => {
 const parseTypeObjects = (tokens: { text: string, kind: string }[]) => {
     const result: { key: string, type: string }[] = [];
     let skipIdentifier = true;
-  
+
     for (const token of tokens) {
-      if (skipIdentifier) {
-        if (token.kind === 'Identifier') {
-          skipIdentifier = false;
+        if (skipIdentifier) {
+            if (token.kind === 'Identifier') {
+                skipIdentifier = false;
+            }
+            continue;
         }
-        continue;
-      }
-  
-      if (token.kind === 'ColonToken') {
-        const typeToken = tokens[tokens.indexOf(token) + 1];
-        const propertyToken = tokens[tokens.indexOf(token) - 1];
-        if (typeToken.kind === 'StringKeyword') {
-          result.push({ key: propertyToken.text, type: typeToken.text });
+
+        if (token.kind === 'ColonToken') {
+            const typeToken = tokens[tokens.indexOf(token) + 1];
+            const propertyToken = tokens[tokens.indexOf(token) - 1];
+            if (typeToken.kind === 'StringKeyword') {
+                result.push({ key: propertyToken.text, type: typeToken.text });
+            }
+            skipIdentifier = true;
         }
-        skipIdentifier = true;
-      }
     }
-  
+
     return result;
 }
 
@@ -70,7 +70,15 @@ const getSequelizeType = (jsType: string) => {
 }
 
 const snakeCase = (str: string) => {
-    return str.replace(/[A-Z]/g, (letter) => `_${letter.toLowerCase()}`);
+    return str.replace(/[A-Z]/g, (letter, index) => {
+        if (index === 0) {
+            return letter.toLowerCase();
+        } else if (str[index - 1] !== '_') {
+            return `_${letter.toLowerCase()}`;
+        } else {
+            return letter.toLowerCase();
+        }
+    });
 }
 
 export { generateModel, readTokensFromSource, parseTypeObjects, snakeCase }

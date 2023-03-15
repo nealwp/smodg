@@ -105,5 +105,11 @@ describe('parser', () => {
             const result = snakeCase(text)
             expect(result).toEqual(expected)
         })
+        test('should convert PascalCase to snake_case', () => {
+            const text = 'ThisIsPascalCase'
+            const expected = 'this_is_pascal_case'
+            const result = snakeCase(text)
+            expect(result).toEqual(expected)
+        })
     })
 })
