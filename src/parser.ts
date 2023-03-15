@@ -81,15 +81,15 @@ const getSequelizeType = (jsType: string) => {
 }
 
 const snakeCase = (str: string) => {
-    return str.replace(/[A-Z]/g, (letter, index) => {
+    return str.replace(/[A-Z]/g, (match, index) => {
         if (index === 0) {
-            return letter.toLowerCase();
-        } else if (str[index - 1] !== '_') {
-            return `_${letter.toLowerCase()}`;
+          return match.toLowerCase();
+        } else if (/[A-Z]/.test(str[index - 1])) {
+          return match.toLowerCase();
         } else {
-            return letter.toLowerCase();
+          return `_${match.toLowerCase()}`;
         }
-    });
+      });
 }
 
 export { generateModel, readTokensFromSource, parseTypeObjects, snakeCase, getSequelizeType }
