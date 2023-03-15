@@ -32,6 +32,7 @@ const readTokensFromSource = (sourceCode: string) => {
             ts.forEachChild(node, recur);
         }
     });
+    console.log(tokens)
     return tokens;
 }
 
@@ -39,6 +40,7 @@ const parseTypeObjects = (tokens: { text: string, kind: string }[]) => {
     const types: { key: string, type: string }[] = [];
     let skipIdentifier = true;
     let tableName = ''
+    const allowedDatatypes = ['StringKeyword', 'NumberKeyword', 'BooleanKeyword', 'Identifier']
 
     for (const token of tokens) {
         if (skipIdentifier) {
@@ -54,7 +56,7 @@ const parseTypeObjects = (tokens: { text: string, kind: string }[]) => {
         if (token.kind === 'ColonToken') {
             const typeToken = tokens[tokens.indexOf(token) + 1];
             const propertyToken = tokens[tokens.indexOf(token) - 1];
-            if (typeToken.kind === 'StringKeyword') {
+            if (allowedDatatypes.includes(typeToken.kind)) {
                 types.push({ key: propertyToken.text, type: typeToken.text });
             }
             skipIdentifier = true;
