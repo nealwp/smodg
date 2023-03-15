@@ -1,4 +1,4 @@
-import { generateModel, readTokensFromSource, parseTypeObjects, snakeCase } from '../src/parser'
+import { generateModel, readTokensFromSource, parseTypeObjects, snakeCase, getSequelizeType } from '../src/parser'
 
 describe('parser', () => {
 
@@ -113,6 +113,25 @@ describe('parser', () => {
             const expected = 'this_is_pascal_case'
             const result = snakeCase(text)
             expect(result).toEqual(expected)
+        })
+    })
+
+    describe('getSequelizeType', () => {
+        test('should return STRING for string', () => {
+            const result = getSequelizeType('string')
+            expect(result).toEqual('STRING')
+        })
+        test('should return BOOLEAN for boolean', () => {
+            const result = getSequelizeType('boolean')
+            expect(result).toEqual('BOOLEAN')
+        })
+        test('should return DATETIME for Date', () => {
+            const result = getSequelizeType('Date')
+            expect(result).toEqual('DATETIME')
+        })
+        test('should return INTEGER for number', () => {
+            const result = getSequelizeType('number')
+            expect(result).toEqual('INTEGER')
         })
     })
 })

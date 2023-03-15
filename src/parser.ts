@@ -61,13 +61,19 @@ const parseTypeObjects = (tokens: { text: string, kind: string }[]) => {
         }
     }
 
-    return {tableName, types};
+    return { tableName, types };
 }
 
 const getSequelizeType = (jsType: string) => {
     switch (jsType) {
         case 'string':
             return 'STRING'
+        case 'boolean':
+            return 'BOOLEAN'
+        case 'Date':
+            return 'DATETIME'
+        case 'number':
+            return 'INTEGER'
         default:
             break;
     }
@@ -85,4 +91,4 @@ const snakeCase = (str: string) => {
     });
 }
 
-export { generateModel, readTokensFromSource, parseTypeObjects, snakeCase }
+export { generateModel, readTokensFromSource, parseTypeObjects, snakeCase, getSequelizeType }
