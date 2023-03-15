@@ -1,4 +1,4 @@
-import { generateModel, readTokensFromSource } from '../src/parser'
+import { generateModel, readTokensFromSource, parseTypeObjects } from '../src/parser'
 
 describe('parser', () => {
 
@@ -24,13 +24,34 @@ describe('parser', () => {
         })
     })
 
+    describe('parseTypeObjects', () => {
+        test('should return an array of objects with type info', () => {
+            const tokens = [
+                { kind: "ExportKeyword", text: "export" }, 
+                { kind: "TypeKeyword", text: "type" }, 
+                { kind: "Identifier", text: "SmallTest" }, 
+                { kind: "FirstAssignment", text: "=" }, 
+                { kind: "FirstPunctuation", text: "{" }, 
+                { kind: "Identifier", text: "name" }, 
+                { kind: "ColonToken", text: ":" }, 
+                { kind: "StringKeyword", text: "string" }, 
+                { kind: "SemicolonToken", text: ";" }, 
+                { kind: "CloseBraceToken", text: "}" }
+            ]
+
+            const expectedOutput = [{key: "name", type: "string"}]
+            const typeObjects = parseTypeObjects(tokens)
+            expect(typeObjects).toEqual(expectedOutput)
+        })
+    })
+
     describe('generateModel', () => {
         test('should return a sequelize model', () => {
             const fileContent = `export type SmallTest = {
                 name: string;
             }`
 
-            const expectedOutput = `@Column({ field: 'name', type: Sequelize.STRING })\nname!: string`
+            const expectedOutput = `@Column({ field: 'name', type: Sequelize.STRING })\nname!: string\n\n`
 
             const result = generateModel(fileContent)
 
