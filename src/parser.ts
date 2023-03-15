@@ -36,33 +36,27 @@ const readTokensFromSource = (sourceCode: string) => {
 }
 
 const parseTypeObjects = (tokens: { text: string, kind: string }[]) => {
-    let result: { key: string, type: string }[] = [];
-    let index = 0;
-    while (index < tokens.length) {
-        if (tokens[index].kind === "TypeKeyword" && tokens[index].text === "type") {
-            const keyIndex = index + 1;
-            let skipNextIdentifier = true;
-            let key = "";
-            let type = "";
-            for (let i = keyIndex; i < tokens.length; i++) {
-                if (tokens[i].kind === "Identifier" && skipNextIdentifier) {
-                    skipNextIdentifier = false;
-                } else if (tokens[i].kind === "Identifier") {
-                    key = tokens[i].text;
-                    break;
-                }
-            }
-            const typeIndex = index + 1;
-            for (let i = typeIndex; i < tokens.length; i++) {
-                if (tokens[i].kind === "StringKeyword") {
-                    type = tokens[i].text;
-                    break;
-                }
-            }
-            result.push({ key, type });
+    const result: { key: string, type: string }[] = [];
+    let skipIdentifier = true;
+  
+    for (const token of tokens) {
+      if (skipIdentifier) {
+        if (token.kind === 'Identifier') {
+          skipIdentifier = false;
         }
-        index++;
+        continue;
+      }
+  
+      if (token.kind === 'ColonToken') {
+        const typeToken = tokens[tokens.indexOf(token) + 1];
+        const propertyToken = tokens[tokens.indexOf(token) - 1];
+        if (typeToken.kind === 'StringKeyword') {
+          result.push({ key: propertyToken.text, type: typeToken.text });
+        }
+        skipIdentifier = true;
+      }
     }
+  
     return result;
 }
 

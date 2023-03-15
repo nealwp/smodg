@@ -25,7 +25,7 @@ describe('parser', () => {
     })
 
     describe('parseTypeObjects', () => {
-        test('should return an array of objects with type info', () => {
+        test('should return an array of objects when there is a single type properties', () => {
             const tokens = [
                 { kind: "ExportKeyword", text: "export" }, 
                 { kind: "TypeKeyword", text: "type" }, 
@@ -40,6 +40,32 @@ describe('parser', () => {
             ]
 
             const expectedOutput = [{key: "name", type: "string"}]
+            const typeObjects = parseTypeObjects(tokens)
+            expect(typeObjects).toEqual(expectedOutput)
+        })
+
+        test('should return an array of objects when there are multiple type properties', () => {
+            const tokens = [
+                { kind: "ExportKeyword", text: "export" }, 
+                { kind: "TypeKeyword", text: "type" }, 
+                { kind: "Identifier", text: "SmallTest" }, 
+                { kind: "FirstAssignment", text: "=" }, 
+                { kind: "FirstPunctuation", text: "{" }, 
+                { kind: "Identifier", text: "name" }, 
+                { kind: "ColonToken", text: ":" }, 
+                { kind: "StringKeyword", text: "string" }, 
+                { kind: "SemicolonToken", text: ";" }, 
+                { kind: "Identifier", text: "anotherName" }, 
+                { kind: "ColonToken", text: ":" }, 
+                { kind: "StringKeyword", text: "string" }, 
+                { kind: "SemicolonToken", text: ";" }, 
+                { kind: "CloseBraceToken", text: "}" }
+            ]
+
+            const expectedOutput = [
+                {key: "name", type: "string"},
+                {key: "anotherName", type: "string"}
+            ]
             const typeObjects = parseTypeObjects(tokens)
             expect(typeObjects).toEqual(expectedOutput)
         })
