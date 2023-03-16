@@ -11,7 +11,10 @@
     "dev": "node ./dist/index.js",
     "build": "rimraf ./dist && npx tsc && copyfiles package.json dist/"
   },
-  "repository": "https://github.com/nealwp/smodg",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/nealwp/smodg.git"
+  },
   "keywords": [
     "sequelize",
     "typescript"
