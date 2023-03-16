@@ -84,7 +84,7 @@ const getSequelizeType = (jsType: string) => {
         case 'boolean':
             return 'BOOLEAN'
         case 'Date':
-            return 'DATETIME'
+            return 'DATE'
         case 'number':
             return 'DECIMAL'
         default:

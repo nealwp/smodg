@@ -147,9 +147,9 @@ describe('parser', () => {
             const result = getSequelizeType('boolean')
             expect(result).toEqual('BOOLEAN')
         })
-        test('should return DATETIME for Date', () => {
+        test('should return DATE for Date', () => {
             const result = getSequelizeType('Date')
-            expect(result).toEqual('DATETIME')
+            expect(result).toEqual('DATE')
         })
         test('should return DECIMAL for number', () => {
             const result = getSequelizeType('number')
