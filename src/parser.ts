@@ -18,7 +18,7 @@ const generateColumnDefinition = (fileContent: string) => {
 
     let modelString = ``
     types.forEach(obj => {
-        modelString = `${modelString}\t${obj.key}: {\n\t\tfield: '${snakeCase(obj.key)}',\n\t\ttype: dataType.${getSequelizeType(obj.type)}\n},\n`
+        modelString = `${modelString}\t${obj.key}: {\n\t\tfield: '${snakeCase(obj.key)}',\n\t\ttype: dataType.${getSequelizeType(obj.type)}\n\t},\n`
     })
 
     return modelString
