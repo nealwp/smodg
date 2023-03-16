@@ -1,4 +1,4 @@
-import { generateModel, readTokensFromSource, parseTypeObjects, snakeCase, getSequelizeType } from '../src/parser'
+import { generateModel, readTokensFromSource, parseTypeObjects, snakeCase, getSequelizeType, generateColumnDefinition } from '../src/parser'
 
 describe('parser', () => {
 
@@ -80,7 +80,7 @@ describe('parser', () => {
                 name: string;
             }`
 
-            const expectedOutput = `@Table({tableName: 'small_test'})\nclass SmallTest extends Model implements SmallTestAttributes {\n\t@Column({ field: 'name', type: Sequelize.STRING })\n\tname!: string\n\n}\n`
+            const expectedOutput = `\t@Column(columnDefinition.name)\n\tname!: string\n\n}\n`
 
             const result = generateModel(fileContent)
 
@@ -92,7 +92,7 @@ describe('parser', () => {
                 anotherName: string;
             }`
 
-            const expectedOutput = `@Table({tableName: 'small_test'})\nclass SmallTest extends Model implements SmallTestAttributes {\n\t@Column({ field: 'name', type: Sequelize.STRING })\n\tname!: string\n\n\t@Column({ field: 'another_name', type: Sequelize.STRING })\n\tanotherName!: string\n\n}\n`
+            const expectedOutput = `\t@Column(columnDefinition.name)\n\tname!: string\n\n\t@Column(columnDefinition.anotherName)\n\tanotherName!: string\n\n}\n`
 
             const result = generateModel(fileContent)
 
@@ -100,6 +100,20 @@ describe('parser', () => {
         })
     })
 
+
+    describe('generateColumnDefinition', () => {
+        test('should return column definition', () => {
+            const fileContent = `export type SmallTest = {
+                name: string;
+                anotherName: string;
+            }`
+
+            const expectedOuput = `\tname: {\n\t\tfield: 'name',\n\t\ttype: dataType.STRING\n},\n\tanotherName: {\n\t\tfield: 'another_name',\n\t\ttype: dataType.STRING\n},\n`
+            const result = generateColumnDefinition(fileContent)
+            expect(result).toEqual(expectedOuput)
+
+        })
+    })
 
     describe('snakeCase', () => {
         test('should convert a camelCase string to snake_case', () => {
@@ -137,9 +151,9 @@ describe('parser', () => {
             const result = getSequelizeType('Date')
             expect(result).toEqual('DATETIME')
         })
-        test('should return INTEGER for number', () => {
+        test('should return DECIMAL for number', () => {
             const result = getSequelizeType('number')
-            expect(result).toEqual('INTEGER')
+            expect(result).toEqual('DECIMAL')
         })
     })
 })

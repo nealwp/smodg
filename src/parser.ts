@@ -4,12 +4,24 @@ const generateModel = (fileContent: string) => {
     const tokens = readTokensFromSource(fileContent);
     const { tableName, types } = parseTypeObjects(tokens)
 
-    let modelString = `@Table({tableName: '${snakeCase(tableName)}'})\nclass ${tableName} extends Model implements ${tableName}Attributes {\n`
+    let modelString = ``
     types.forEach(obj => {
-        modelString = `${modelString}\t@Column({ field: '${snakeCase(obj.key)}', type: Sequelize.${getSequelizeType(obj.type)} })\n\t${obj.key}!: ${obj.type}\n\n`
+        modelString = `${modelString}\t@Column(columnDefinition.${obj.key})\n\t${obj.key}!: ${obj.type}\n\n`
     })
 
     return modelString + '}\n'
+}
+
+const generateColumnDefinition = (fileContent: string) => {
+    const tokens = readTokensFromSource(fileContent);
+    const { tableName, types } = parseTypeObjects(tokens)
+
+    let modelString = ``
+    types.forEach(obj => {
+        modelString = `${modelString}\t${obj.key}: {\n\t\tfield: '${snakeCase(obj.key)}',\n\t\ttype: dataType.${getSequelizeType(obj.type)}\n},\n`
+    })
+
+    return modelString
 }
 
 
@@ -74,7 +86,7 @@ const getSequelizeType = (jsType: string) => {
         case 'Date':
             return 'DATETIME'
         case 'number':
-            return 'INTEGER'
+            return 'DECIMAL'
         default:
             break;
     }
@@ -92,4 +104,4 @@ const snakeCase = (str: string) => {
       });
 }
 
-export { generateModel, readTokensFromSource, parseTypeObjects, snakeCase, getSequelizeType }
+export { generateModel, readTokensFromSource, parseTypeObjects, snakeCase, getSequelizeType, generateColumnDefinition }
