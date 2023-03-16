@@ -4,7 +4,7 @@
 ## Installation
 
 ```bash
-npm i -g smodg
+npm i -g @nealwp/smodg
 ```
 
 ## Usage
