@@ -41,7 +41,7 @@ export const columnDefinition: Record<<%MODEL_NAME%>Keys, ColumnOptions> = {
         autoIncrement: true,
     },
     
-    ${input.columnDefinitions}
+${input.columnDefinitions}
 
     createdBy: {
         field: "created_by",
@@ -66,7 +66,7 @@ export class <%MODEL_NAME%> extends Model<<%MODEL_NAME%>Attributes> implements <
     @Column(columnDefinition.id)
     id!: number;
 
-    ${input.columnDecorators}
+${input.columnDecorators}
 
     @Column(columnDefinition.createdBy)
     createdBy!: string;
