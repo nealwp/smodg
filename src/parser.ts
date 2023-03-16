@@ -10,7 +10,7 @@ export const generateModelInputs = (fileContent: string) => {
 
     types.forEach(obj => {
         columnDecorators = `${columnDecorators}\n\t@Column(columnDefinition.${obj.key})\n\t${obj.key}!: ${obj.type}\n`
-        columnDefinitions = `${columnDefinitions}\t${obj.key}: {\n\t\tfield: '${snakeCase(obj.key)}',\n\t\ttype: dataType.${getSequelizeType(obj.type)}\n\t},\n`
+        columnDefinitions = `${columnDefinitions}\t${obj.key}: {\n\t\tfield: '${snakeCase(obj.key)}',\n\t\ttype: DataType.${getSequelizeType(obj.type)}\n\t},\n`
     })
 
     return {modelName, columnDecorators, columnDefinitions}
@@ -35,7 +35,7 @@ const generateColumnDefinition = (fileContent: string) => {
 
     let columnDefinitions = ``
     types.forEach(obj => {
-        columnDefinitions = `${columnDefinitions}\t${obj.key}: {\n\t\tfield: '${snakeCase(obj.key)}',\n\t\ttype: dataType.${getSequelizeType(obj.type)}\n\t},\n`
+        columnDefinitions = `${columnDefinitions}\t${obj.key}: {\n\t\tfield: '${snakeCase(obj.key)}',\n\t\ttype: DataType.${getSequelizeType(obj.type)}\n\t},\n`
     })
 
     return columnDefinitions
