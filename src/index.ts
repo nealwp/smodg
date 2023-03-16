@@ -2,22 +2,22 @@
 
 import fs from 'node:fs'
 import { argv } from 'node:process';
-import { generateColumnDefinition, generateModel } from './parser';
+import { generateModelInputs } from './parser';
 import { modelTemplate } from './templates/model.smodg';
+import { kebabCase } from './formatters';
 
 try {
     const sourceCode = fs.readFileSync(argv[2], 'utf-8')
-    const columnDecorators = generateModel(sourceCode)
-    const columnDefinitions = generateColumnDefinition(sourceCode)
+    const modelInputs = generateModelInputs(sourceCode)
     
-    const model = modelTemplate({columnDefinitions, columnDecorators})
+    const model = modelTemplate(modelInputs)
 
     if (!fs.existsSync('./src/models')) {
         fs.mkdirSync('./src/models')
     }
 
     try {
-        fs.writeFileSync('./src/models/test.model.ts', model)
+        fs.writeFileSync(`./src/models/${kebabCase(modelInputs.modelName)}.model.ts`, model)
     } catch (error) {
         console.error(error)
     }

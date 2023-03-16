@@ -1,27 +1,44 @@
 import ts from 'typescript';
+import { snakeCase } from './formatters';
+
+export const generateModelInputs = (fileContent: string) => {
+    const tokens = readTokensFromSource(fileContent);
+    const { modelName, types } = parseTypeObjects(tokens)
+    
+    let columnDecorators = ``
+    let columnDefinitions = ``
+
+    types.forEach(obj => {
+        columnDecorators = `${columnDecorators}\n\t@Column(columnDefinition.${obj.key})\n\t${obj.key}!: ${obj.type}\n`
+        columnDefinitions = `${columnDefinitions}\t${obj.key}: {\n\t\tfield: '${snakeCase(obj.key)}',\n\t\ttype: dataType.${getSequelizeType(obj.type)}\n\t},\n`
+    })
+
+    return {modelName, columnDecorators, columnDefinitions}
+
+}
 
 const generateModel = (fileContent: string) => {
     const tokens = readTokensFromSource(fileContent);
-    const { tableName, types } = parseTypeObjects(tokens)
+    const { modelName, types } = parseTypeObjects(tokens)
 
-    let modelString = ``
+    let columnDecorators = ``
     types.forEach(obj => {
-        modelString = `${modelString}\t@Column(columnDefinition.${obj.key})\n\t${obj.key}!: ${obj.type}\n\n`
+        columnDecorators = `${columnDecorators}\n\t@Column(columnDefinition.${obj.key})\n\t${obj.key}!: ${obj.type}\n`
     })
 
-    return modelString
+    return columnDecorators
 }
 
 const generateColumnDefinition = (fileContent: string) => {
     const tokens = readTokensFromSource(fileContent);
-    const { tableName, types } = parseTypeObjects(tokens)
+    const { modelName, types } = parseTypeObjects(tokens)
 
-    let modelString = ``
+    let columnDefinitions = ``
     types.forEach(obj => {
-        modelString = `${modelString}\t${obj.key}: {\n\t\tfield: '${snakeCase(obj.key)}',\n\t\ttype: dataType.${getSequelizeType(obj.type)}\n\t},\n`
+        columnDefinitions = `${columnDefinitions}\t${obj.key}: {\n\t\tfield: '${snakeCase(obj.key)}',\n\t\ttype: dataType.${getSequelizeType(obj.type)}\n\t},\n`
     })
 
-    return modelString
+    return columnDefinitions
 }
 
 
@@ -50,14 +67,14 @@ const readTokensFromSource = (sourceCode: string) => {
 const parseTypeObjects = (tokens: { text: string, kind: string }[]) => {
     const types: { key: string, type: string }[] = [];
     let skipIdentifier = true;
-    let tableName = ''
+    let modelName = ''
     const allowedDatatypes = ['StringKeyword', 'NumberKeyword', 'BooleanKeyword', 'Identifier']
 
     for (const token of tokens) {
         if (skipIdentifier) {
             if (token.kind === 'Identifier') {
-                if (!tableName) {
-                    tableName = token.text;
+                if (!modelName) {
+                    modelName = token.text;
                 }
                 skipIdentifier = false;
             }
@@ -74,7 +91,7 @@ const parseTypeObjects = (tokens: { text: string, kind: string }[]) => {
         }
     }
 
-    return { tableName, types };
+    return { modelName, types };
 }
 
 const getSequelizeType = (jsType: string) => {
@@ -92,16 +109,6 @@ const getSequelizeType = (jsType: string) => {
     }
 }
 
-const snakeCase = (str: string) => {
-    return str.replace(/[A-Z]/g, (match, index) => {
-        if (index === 0) {
-          return match.toLowerCase();
-        } else if (/[A-Z]/.test(str[index - 1])) {
-          return match.toLowerCase();
-        } else {
-          return `_${match.toLowerCase()}`;
-        }
-      });
-}
 
-export { generateModel, readTokensFromSource, parseTypeObjects, snakeCase, getSequelizeType, generateColumnDefinition }
+
+export { generateModel, readTokensFromSource, parseTypeObjects, getSequelizeType, generateColumnDefinition }

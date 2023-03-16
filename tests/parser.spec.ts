@@ -1,4 +1,4 @@
-import { generateModel, readTokensFromSource, parseTypeObjects, snakeCase, getSequelizeType, generateColumnDefinition } from '../src/parser'
+import { generateModel, readTokensFromSource, parseTypeObjects, getSequelizeType, generateColumnDefinition } from '../src/parser'
 
 describe('parser', () => {
 
@@ -39,7 +39,7 @@ describe('parser', () => {
                 { kind: "CloseBraceToken", text: "}" }
             ]
 
-            const expectedOutput = { tableName: 'SmallTest', types: [{key: "name", type: "string"}] }
+            const expectedOutput = { modelName: 'SmallTest', types: [{key: "name", type: "string"}] }
             const typeObjects = parseTypeObjects(tokens)
             expect(typeObjects).toEqual(expectedOutput)
         })
@@ -63,7 +63,7 @@ describe('parser', () => {
             ]
 
             const expectedOutput = {
-                tableName: 'SmallTest',
+                modelName: 'SmallTest',
                 types: [
                     {key: "name", type: "string"},
                     {key: "anotherName", type: "string"}
@@ -80,7 +80,7 @@ describe('parser', () => {
                 name: string;
             }`
 
-            const expectedOutput = `\t@Column(columnDefinition.name)\n\tname!: string\n\n}\n`
+            const expectedOutput = `\n\t@Column(columnDefinition.name)\n\tname!: string\n`
 
             const result = generateModel(fileContent)
 
@@ -92,7 +92,7 @@ describe('parser', () => {
                 anotherName: string;
             }`
 
-            const expectedOutput = `\t@Column(columnDefinition.name)\n\tname!: string\n\n\t@Column(columnDefinition.anotherName)\n\tanotherName!: string\n\n}\n`
+            const expectedOutput = `\n\t@Column(columnDefinition.name)\n\tname!: string\n\n\t@Column(columnDefinition.anotherName)\n\tanotherName!: string\n`
 
             const result = generateModel(fileContent)
 
@@ -112,29 +112,6 @@ describe('parser', () => {
             const result = generateColumnDefinition(fileContent)
             expect(result).toEqual(expectedOuput)
 
-        })
-    })
-
-    describe('snakeCase', () => {
-        test('should convert a camelCase string to snake_case', () => {
-            const text = 'thisIsCamelCase'
-            const expected = 'this_is_camel_case'
-            const result = snakeCase(text)
-            expect(result).toEqual(expected)
-        })
-
-        test('should treat consecutive uppercase as a single word', () => {
-            const text = 'thisIsCostUSD'
-            const expected = 'this_is_cost_usd'
-            const result = snakeCase(text)
-            expect(result).toEqual(expected)
-        })
-
-        test('should convert PascalCase to snake_case', () => {
-            const text = 'ThisIsPascalCase'
-            const expected = 'this_is_pascal_case'
-            const result = snakeCase(text)
-            expect(result).toEqual(expected)
         })
     })
 

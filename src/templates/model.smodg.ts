@@ -1,3 +1,5 @@
+import { snakeCase } from "../formatters"
+
 export const modelTemplate = (input: any) => {
     return `
 import {
@@ -11,10 +13,10 @@ import {
     HasMany,
 } from 'sequelize-typescript';
 
-import { <%MODEL_NAME%> as <%MODEL_NAME%>API } from  '@edf-re/gsp-service-interfaces/gsp-opex-service'
+import { ${input.modelName} as ${input.modelName}API } from '@_YOUR_TYPES'
 import { ModelAttributeColumnOptions } from 'sequelize';
 
-interface <%MODEL_NAME%>Attributes extends <%MODEL_NAME%>API {
+interface ${input.modelName}Attributes extends ${input.modelName}API {
     id: number;
     createdBy: string;
     createdDate: Date;
@@ -22,27 +24,24 @@ interface <%MODEL_NAME%>Attributes extends <%MODEL_NAME%>API {
     updatedDate: Date;
 }
 
-type <%MODEL_NAME%>Keys = keyof <%MODEL_NAME%>Attributes
+type ${input.modelName}Keys = keyof ${input.modelName}Attributes
 
 interface ColumnOptions extends ModelAttributeColumnOptions {
     field: string
 }
 
 export const tableDefinition = {
-    tableName: '<%TABLE_NAME%>',
-    schema: '<%SCHEMA_NAME%>',
+    tableName: '${snakeCase(input.modelName)}', ${input.schemaName ? `\n\tschema: '${input.schemaName}',`: ''}
 }
 
-export const columnDefinition: Record<<%MODEL_NAME%>Keys, ColumnOptions> = {
+export const columnDefinition: Record<${input.modelName}Keys, ColumnOptions> = {
     id: {
         field: "id",
         type: DataType.INTEGER,
         primaryKey: true,
         autoIncrement: true,
-    },
-    
+    },   
 ${input.columnDefinitions}
-
     createdBy: {
         field: "created_by",
         type: DataType.STRING,
@@ -62,12 +61,10 @@ ${input.columnDefinitions}
 }
 
 @Table(tableDefinition)
-export class <%MODEL_NAME%> extends Model<<%MODEL_NAME%>Attributes> implements <%MODEL_NAME%>Attributes {
+export class ${input.modelName} extends Model<${input.modelName}Attributes> implements ${input.modelName}Attributes {
     @Column(columnDefinition.id)
     id!: number;
-
 ${input.columnDecorators}
-
     @Column(columnDefinition.createdBy)
     createdBy!: string;
 
