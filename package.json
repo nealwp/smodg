@@ -9,7 +9,7 @@
   "scripts": {
     "test": "jest",
     "dev": "node ./dist/index.js",
-    "build": "rimraf ./dist && npx tsc && copyfiles package.json README.md dist/"
+    "build": "rimraf ./dist && npx tsc && copyfiles package.json README.md LICENSE dist/"
   },
   "repository": {
     "type": "git",
