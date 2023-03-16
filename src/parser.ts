@@ -9,7 +9,7 @@ const generateModel = (fileContent: string) => {
         modelString = `${modelString}\t@Column(columnDefinition.${obj.key})\n\t${obj.key}!: ${obj.type}\n\n`
     })
 
-    return modelString + '}\n'
+    return modelString
 }
 
 const generateColumnDefinition = (fileContent: string) => {
