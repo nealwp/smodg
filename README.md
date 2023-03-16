@@ -2,7 +2,7 @@
 > Generate Sequelize models from TypeScript type definitions
 
 [![npm version](https://badgen.net/npm/v/smodg)](https://www.npmjs.com/package/smodg)
-![build](https://github.com/nealwp/smodg/actions/workflows/build.yaml/badge.svg)
+![build](https://github.com/nealwp/smodg/actions/workflows/build.yml/badge.svg)
 
 ## Installation
 
