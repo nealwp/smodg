@@ -1,5 +1,5 @@
 {
-  "name": "smodg",
+  "name": "@nealwp/smodg",
   "version": "1.0.0",
   "description": "Generate basic Sequelize models from TypeScript declaration files",
   "main": "dist/index.js",
