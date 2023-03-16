@@ -2,9 +2,9 @@
   "name": "smodg",
   "version": "1.0.0",
   "description": "Generate basic Sequelize models from TypeScript declaration files",
-  "main": "dist/index.js",
+  "main": "index.js",
   "bin": {
-    "smodg": "./dist/index.js"
+    "smodg": "./index.js"
   },
   "scripts": {
     "test": "jest",
