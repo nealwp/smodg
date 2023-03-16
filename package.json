@@ -1,5 +1,5 @@
 {
-  "name": "@nealwp/smodg",
+  "name": "smodg",
   "version": "1.0.0",
   "description": "Generate basic Sequelize models from TypeScript declaration files",
   "main": "dist/index.js",
@@ -10,9 +10,6 @@
     "test": "jest",
     "dev": "node ./dist/index.js",
     "build": "rimraf ./dist && npx tsc && copyfiles package.json dist/"
-  },
-  "publishConfig": {
-    "registry": "https://npm.pkg.github.com"
   },
   "repository": "https://github.com/nealwp/smodg",
   "keywords": [
