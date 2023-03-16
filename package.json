@@ -1,6 +1,6 @@
 {
   "name": "smodg",
-  "version": "1.0.0",
+  "version": "1.0.1",
   "description": "Generate basic Sequelize models from TypeScript declaration files",
   "main": "index.js",
   "bin": {
