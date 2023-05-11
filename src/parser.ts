@@ -45,7 +45,7 @@ const generateColumnDefinition = (fileContent: string) => {
 
 
 const generateTableDefinition = (modelName: string, schemaName: string) => {
-   return `\ttableName: '${snakeCase(modelName)}', ${schemaName ? `\n\tschema: '${schemaName}',`: ''}` 
+   return `\ttableName: '${snakeCase(modelName)}', ${schemaName ? `\n\tschema: '${snakeCase(schemaName)}',`: ''}` 
 }
 
 const readTokensFromSource = (sourceCode: string) => {
@@ -117,4 +117,4 @@ const getSequelizeType = (jsType: string) => {
 
 
 
-export { generateModel, readTokensFromSource, parseTypeObjects, getSequelizeType, generateColumnDefinition }
+export { generateModel, readTokensFromSource, parseTypeObjects, getSequelizeType, generateColumnDefinition, generateTableDefinition }

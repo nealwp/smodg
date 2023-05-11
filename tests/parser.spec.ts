@@ -1,4 +1,4 @@
-import { generateModel, readTokensFromSource, parseTypeObjects, getSequelizeType, generateColumnDefinition } from '../src/parser'
+import { generateModel, readTokensFromSource, parseTypeObjects, getSequelizeType, generateColumnDefinition, generateTableDefinition } from '../src/parser'
 
 describe('parser', () => {
 
@@ -131,6 +131,19 @@ describe('parser', () => {
         test('should return DECIMAL for number', () => {
             const result = getSequelizeType('number')
             expect(result).toEqual('FLOAT')
+        })
+    })
+
+    describe('generateTableDefinition', () => {
+        test('should return a table def string with no schema if schema is blank', () => {
+            const expected = `\ttableName: 'my_model', `
+            const result = generateTableDefinition("MyModel", "")
+            expect(result).toEqual(expected)
+        })
+        test('should return a table def string with schema if schema is not blank', () => {
+            const expected = `\ttableName: 'my_model', \n\tschema: 'my_schema',`
+            const result = generateTableDefinition("MyModel", "MySchema")
+            expect(result).toEqual(expected)
         })
     })
 })
