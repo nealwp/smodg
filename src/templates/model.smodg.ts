@@ -13,10 +13,12 @@ import {
     HasMany,
 } from 'sequelize-typescript';
 
-import { ${input.modelName} as ${input.modelName}API } from '@_YOUR_TYPES'
+import { ${input.modelName} as ${input.modelName}Type } from '@_YOUR_TYPES'
 import { ModelAttributeColumnOptions } from 'sequelize';
 
-interface ${input.modelName}Attributes extends ${input.modelName}API {
+interface ${input.modelName}CreationAttributes extends ${input.modelName}Type {}
+
+interface ${input.modelName}Attributes extends ${input.modelName}CreationAttributes {
     id: number;
     createdBy: string;
     createdDate: Date;
@@ -61,7 +63,9 @@ ${input.columnDefinitions}
 }
 
 @Table(tableDefinition)
-export class ${input.modelName} extends Model<${input.modelName}Attributes> implements ${input.modelName}Attributes {
+export class ${input.modelName} 
+extends Model<${input.modelName}Attributes, ${input.modelName}CreationAttributes>
+implements ${input.modelName}Attributes {
     @Column(columnDefinition.id)
     id!: number;
 ${input.columnDecorators}
