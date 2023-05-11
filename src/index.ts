@@ -68,4 +68,9 @@ Options:
     console.log(helpText)
 }
 
+const printVersion = () => {
+    const packageVersion = require('./package.json').version
+    console.log(packageVersion)
+}
+
 main()
