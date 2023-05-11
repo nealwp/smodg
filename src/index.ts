@@ -1,4 +1,5 @@
-#!/usr/bin/env node 
+#!/usr/bin/env node
+
 import fs from 'node:fs'
 import { generateModelInputs } from './parser';
 import { modelTemplate } from './templates/model.smodg';
@@ -11,7 +12,7 @@ const main = () => {
 
     let generateMigrationFile = false
     let schema = ""    
-    let outputDir = './src/models'
+    let outputDir = 'src/models'
 
     if(args.h || args.help){
         printHelp()
@@ -39,8 +40,16 @@ const main = () => {
         outputDir = args.outputDir
     }
 
+    if(!filePath){
+        console.error('error: path to type file is required!')
+        return
+    }
+
     try {
-        generateModel(filePath, schema)
+        const options = { outputDir, schema }
+
+        generateModel(filePath, options)
+        
         if (generateMigrationFile) {
             console.log('generating migration')
             //generateMigration()
@@ -51,18 +60,18 @@ const main = () => {
         
 }
 
-const generateModel = (filePath: string, schema: string) => {
+const generateModel = (filePath: string, options: {outputDir: string, schema: string, }) => {
     const sourceCode = fs.readFileSync(filePath, 'utf-8')
     const modelInputs = generateModelInputs(sourceCode)
 
-    const model = modelTemplate({...modelInputs, schemaName: schema})
+    const model = modelTemplate({...modelInputs, schemaName: options.schema})
 
-    if (!fs.existsSync('./src/models')) {
-        fs.mkdirSync('./src/models')
+    if (!fs.existsSync(`./${options.outputDir}`)) {
+        fs.mkdirSync(`./${options.outputDir}`)
     }
 
     try {
-        fs.writeFileSync(`./src/models/${kebabCase(modelInputs.modelName)}.model.ts`, model)
+        fs.writeFileSync(`./${options.outputDir}/${kebabCase(modelInputs.modelName)}.model.ts`, model)
     } catch (error) {
         console.error(error)
     }
@@ -74,6 +83,8 @@ const printHelp = () => {
     Sequelize Model Generator    
 =================================
 
+Generate a Sequelize model based on a TypeScript type declaration.
+
 Usage:
 
     smodg [options] <filepath> 
@@ -81,9 +92,9 @@ Usage:
 Options:
 
     -h, --help        show help
-    -m, --migration   create an Umzug migration. default false
-    -o, --outputDir   model output directory. default ./src/models
-    -s, --schema      specify a schema. default is none/public 
+    -m, --migration   create an Umzug migration. default: false
+    -o, --outputDir   model output directory, relative to current path. default: "src/models"
+    -s, --schema      specify a schema. default: none 
     -v, --version     print installed version
 ` 
 
