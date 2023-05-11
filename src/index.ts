@@ -9,7 +9,9 @@ const main = () => {
     const args = minimist(process.argv.slice(2)) 
     const filePath = args._[0] 
 
-    console.log(args)
+    let generateMigrationFile = false
+    let schema = ""    
+    let outputDir = './src/models'
 
     if(args.h || args.help){
         printHelp()
@@ -20,30 +22,50 @@ const main = () => {
         printVersion()
         return
     }
+
+    if(args.m || args.migration){
+        generateMigrationFile = true
+    }
+
+    if(args.s){
+        schema = args.s
+    } else if (args.schema) {
+        schema = args.schema
+    }
+
+    if(args.o){
+        outputDir = args.o
+    } else if (args.outputDir) {
+        outputDir = args.outputDir
+    }
+
+    try {
+        generateModel(filePath, schema)
+        if (generateMigrationFile) {
+            console.log('generating migration')
+            //generateMigration()
+        }
+    } catch(error) {
+        console.error(error)
+    }
         
 }
 
-const generateModel = (filePath: string) => {
+const generateModel = (filePath: string, schema: string) => {
+    const sourceCode = fs.readFileSync(filePath, 'utf-8')
+    const modelInputs = generateModelInputs(sourceCode)
+
+    const model = modelTemplate({...modelInputs, schemaName: schema})
+
+    if (!fs.existsSync('./src/models')) {
+        fs.mkdirSync('./src/models')
+    }
+
     try {
-        const sourceCode = fs.readFileSync(filePath, 'utf-8')
-        const modelInputs = generateModelInputs(sourceCode)
-
-        const model = modelTemplate(modelInputs)
-
-        if (!fs.existsSync('./src/models')) {
-            fs.mkdirSync('./src/models')
-        }
-
-        try {
-            fs.writeFileSync(`./src/models/${kebabCase(modelInputs.modelName)}.model.ts`, model)
-        } catch (error) {
-            console.error(error)
-        }
-
+        fs.writeFileSync(`./src/models/${kebabCase(modelInputs.modelName)}.model.ts`, model)
     } catch (error) {
         console.error(error)
     }
-
 }
 
 const printHelp = () => {
