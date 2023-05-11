@@ -132,6 +132,10 @@ describe('parser', () => {
             const result = getSequelizeType('number')
             expect(result).toEqual('FLOAT')
         })
+        test('should return undefined for unknown type', () => {
+            const result = getSequelizeType('FooBar')
+            expect(result).toBe(undefined)
+        })
     })
 
     describe('generateTableDefinition', () => {
