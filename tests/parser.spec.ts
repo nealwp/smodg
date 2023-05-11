@@ -130,7 +130,7 @@ describe('parser', () => {
         })
         test('should return DECIMAL for number', () => {
             const result = getSequelizeType('number')
-            expect(result).toEqual('DECIMAL')
+            expect(result).toEqual('FLOAT')
         })
     })
 })

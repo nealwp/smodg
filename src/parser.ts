@@ -103,7 +103,7 @@ const getSequelizeType = (jsType: string) => {
         case 'Date':
             return 'DATE'
         case 'number':
-            return 'DECIMAL'
+            return 'FLOAT'
         default:
             break;
     }
