@@ -1,3 +1,6 @@
+/** 
+* Convert a string to snake_case
+* */
 const snakeCase = (str: string) => {
     return str.replace(/[A-Z]/g, (match, index) => {
         if (index === 0) {
@@ -10,6 +13,9 @@ const snakeCase = (str: string) => {
     });
 }
 
+/**
+* Convert a string to kebab-case
+*/
 const kebabCase = (str: string) => {
     return str.replace(/[A-Z]/g, (match, index) => {
         if (index === 0) {

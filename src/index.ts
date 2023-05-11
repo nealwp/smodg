@@ -1,10 +1,10 @@
 #!/usr/bin/env node
 
 import fs from 'node:fs'
-import { generateModelInputs } from './parser';
-import { modelTemplate } from './templates/model.smodg';
-import { kebabCase } from './formatters';
 import minimist from 'minimist';
+import { generateModelInputs } from './parser';
+import { modelTemplate, migrationTemplate } from './templates';
+import { kebabCase } from './formatters';
 
 const main = () => {
     const args = minimist(process.argv.slice(2)) 
@@ -46,13 +46,22 @@ const main = () => {
     }
 
     try {
-        const options = { outputDir, schema }
 
-        generateModel(filePath, options)
+        const sourceCode = fs.readFileSync(filePath, 'utf-8')        
+        const modelInputs = generateModelInputs(sourceCode, schema)
+        const model = modelTemplate(modelInputs)
         
+        writeModelToFile(model, { outputDir, modelName: modelInputs.modelName })
+
         if (generateMigrationFile) {
-            console.log('generating migration')
-            //generateMigration()
+            
+            const migrationInputs = {
+                tableDefinition: modelInputs.tableDefinition,
+                columnDefinitions: modelInputs.columnDefinitions
+            }
+
+            const migration = migrationTemplate(migrationInputs)
+            //writeMigrationToFile()
         }
     } catch(error) {
         console.error(error)
@@ -60,18 +69,14 @@ const main = () => {
         
 }
 
-const generateModel = (filePath: string, options: {outputDir: string, schema: string, }) => {
-    const sourceCode = fs.readFileSync(filePath, 'utf-8')
-    const modelInputs = generateModelInputs(sourceCode)
-
-    const model = modelTemplate({...modelInputs, schemaName: options.schema})
-
+const writeModelToFile = (model: string, options: {outputDir: string, modelName: string}) => {
+    
     if (!fs.existsSync(`./${options.outputDir}`)) {
         fs.mkdirSync(`./${options.outputDir}`)
     }
 
     try {
-        fs.writeFileSync(`./${options.outputDir}/${kebabCase(modelInputs.modelName)}.model.ts`, model)
+        fs.writeFileSync(`./${options.outputDir}/${kebabCase(options.modelName)}.model.ts`, model)
     } catch (error) {
         console.error(error)
     }

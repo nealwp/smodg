@@ -1,7 +1,7 @@
 import ts from 'typescript';
 import { snakeCase } from './formatters';
 
-export const generateModelInputs = (fileContent: string) => {
+export const generateModelInputs = (fileContent: string, schemaName: string) => {
     const tokens = readTokensFromSource(fileContent);
     const { modelName, types } = parseTypeObjects(tokens)
     
@@ -13,7 +13,9 @@ export const generateModelInputs = (fileContent: string) => {
         columnDefinitions = `${columnDefinitions}\t${obj.key}: {\n\t\tfield: '${snakeCase(obj.key)}',\n\t\ttype: DataType.${getSequelizeType(obj.type)}\n\t},\n`
     })
 
-    return {modelName, columnDecorators, columnDefinitions}
+    const tableDefinition = generateTableDefinition(modelName, schemaName)
+
+    return {modelName, columnDecorators, columnDefinitions, tableDefinition}
 
 }
 
@@ -41,6 +43,10 @@ const generateColumnDefinition = (fileContent: string) => {
     return columnDefinitions
 }
 
+
+const generateTableDefinition = (modelName: string, schemaName: string) => {
+   return `\ttableName: '${snakeCase(modelName)}', ${schemaName ? `\n\tschema: '${schemaName}',`: ''}` 
+}
 
 const readTokensFromSource = (sourceCode: string) => {
     const sourceFile = ts.createSourceFile("test.ts", sourceCode, ts.ScriptTarget.Latest);

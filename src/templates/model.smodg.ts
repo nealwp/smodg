@@ -1,6 +1,12 @@
-import { snakeCase } from "../formatters"
 
-export const modelTemplate = (input: any) => {
+export type ModelTemplateInput = {
+    modelName: string,
+    tableDefinition: string,
+    columnDefinitions: string,
+    columnDecorators: string
+}
+
+export const modelTemplate = (input: ModelTemplateInput) => {
     return `
 import {
     Column,
@@ -33,7 +39,7 @@ interface ColumnOptions extends ModelAttributeColumnOptions {
 }
 
 export const tableDefinition = {
-    tableName: '${snakeCase(input.modelName)}', ${input.schemaName ? `\n\tschema: '${input.schemaName}',`: ''}
+${input.tableDefinition}
 }
 
 export const columnDefinition: Record<${input.modelName}Keys, ColumnOptions> = {
