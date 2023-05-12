@@ -61,7 +61,7 @@ const main = () => {
             }
 
             const migration = migrationTemplate(migrationInputs)
-            //writeMigrationToFile()
+            //writeMigrationToFile(migration)
         }
     } catch(error) {
         console.error(error)
