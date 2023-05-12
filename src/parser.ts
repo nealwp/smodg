@@ -90,6 +90,9 @@ const getSequelizeType = (jsType: string) => {
     }
 }
 
-
-
-export {readTokensFromSource, parseTypeObjects, getSequelizeType, generateTableDefinition }
+export {
+    readTokensFromSource,
+	parseTypeObjects,
+	getSequelizeType,
+	generateTableDefinition
+}

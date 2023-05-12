@@ -1,4 +1,10 @@
-import { readTokensFromSource, parseTypeObjects, getSequelizeType, generateTableDefinition, generateModelInputs } from '../src/parser'
+import { 
+    readTokensFromSource,
+	parseTypeObjects,
+	getSequelizeType,
+	generateTableDefinition,
+	generateModelInputs
+} from '../src/parser'
 
 describe('parser', () => {
 
