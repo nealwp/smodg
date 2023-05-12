@@ -19,31 +19,6 @@ export const generateModelInputs = (fileContent: string, schemaName: string) => 
 
 }
 
-const generateModel = (fileContent: string) => {
-    const tokens = readTokensFromSource(fileContent);
-    const { modelName, types } = parseTypeObjects(tokens)
-
-    let columnDecorators = ``
-    types.forEach(obj => {
-        columnDecorators = `${columnDecorators}\n\t@Column(columnDefinition.${obj.key})\n\t${obj.key}!: ${obj.type}\n`
-    })
-
-    return columnDecorators
-}
-
-const generateColumnDefinition = (fileContent: string) => {
-    const tokens = readTokensFromSource(fileContent);
-    const { modelName, types } = parseTypeObjects(tokens)
-
-    let columnDefinitions = ``
-    types.forEach(obj => {
-        columnDefinitions = `${columnDefinitions}\t${obj.key}: {\n\t\tfield: '${snakeCase(obj.key)}',\n\t\ttype: DataType.${getSequelizeType(obj.type)}\n\t},\n`
-    })
-
-    return columnDefinitions
-}
-
-
 const generateTableDefinition = (modelName: string, schemaName: string) => {
    return `\ttableName: '${snakeCase(modelName)}', ${schemaName ? `\n\tschema: '${snakeCase(schemaName)}',`: ''}` 
 }
@@ -117,4 +92,4 @@ const getSequelizeType = (jsType: string) => {
 
 
 
-export { generateModel, readTokensFromSource, parseTypeObjects, getSequelizeType, generateColumnDefinition, generateTableDefinition }
+export {readTokensFromSource, parseTypeObjects, getSequelizeType, generateTableDefinition }
