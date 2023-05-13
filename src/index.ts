@@ -5,6 +5,7 @@ import minimist from 'minimist';
 import { generateModelInputs } from './parser';
 import { modelTemplate, migrationTemplate } from './templates';
 import { kebabCase } from './formatters';
+import { version } from '../package.json'
 
 const main = () => {
     const args = minimist(process.argv.slice(2)) 
@@ -69,7 +70,7 @@ const main = () => {
         
 }
 
-const writeModelToFile = (model: string, options: {outputDir: string, modelName: string}) => {
+export const writeModelToFile = (model: string, options: {outputDir: string, modelName: string}) => {
     
     if (!fs.existsSync(`./${options.outputDir}`)) {
         fs.mkdirSync(`./${options.outputDir}`)
@@ -82,7 +83,7 @@ const writeModelToFile = (model: string, options: {outputDir: string, modelName:
     }
 }
 
-const printHelp = () => {
+export const printHelp = () => {
     const helpText = `
 =================================
     Sequelize Model Generator    
@@ -106,9 +107,8 @@ Options:
     console.log(helpText)
 }
 
-const printVersion = () => {
-    const packageVersion = require('./package.json').version
-    console.log(packageVersion)
+export const printVersion = () => {
+    console.log(`smodg v${version}`)
 }
 
 main()
