@@ -7,10 +7,7 @@ import { modelTemplate, migrationTemplate } from './templates';
 import { kebabCase } from './formatters';
 import { version } from '../package.json'
 
-const main = () => {
-    const args = minimist(process.argv.slice(2)) 
-    const filePath = args._[0] 
-
+export const main = (args: minimist.ParsedArgs, filePath: string) => {
     let generateMigrationFile = false
     let schema = ""    
     let outputDir = 'src/models'
@@ -111,4 +108,8 @@ export const printVersion = () => {
     console.log(`smodg v${version}`)
 }
 
-main()
+
+const args = minimist(process.argv.slice(2)) 
+const filePath = args._[0] 
+
+main(args, filePath)
