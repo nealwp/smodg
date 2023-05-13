@@ -7,7 +7,10 @@ import { modelTemplate, migrationTemplate } from './templates';
 import { kebabCase } from './formatters';
 import { version } from '../package.json'
 
-export const main = (args: minimist.ParsedArgs, filePath: string) => {
+export const main = (args: minimist.ParsedArgs) => {
+    
+    const filePath = args._[0] 
+    
     let generateMigrationFile = false
     let schema = ""    
     let outputDir = 'src/models'
@@ -110,6 +113,5 @@ export const printVersion = () => {
 
 
 const args = minimist(process.argv.slice(2)) 
-const filePath = args._[0] 
 
-main(args, filePath)
+main(args)

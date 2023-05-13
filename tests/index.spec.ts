@@ -9,7 +9,8 @@ jest.mock('../package.json', () => ({
 import {
     printVersion,
     printHelp,
-    writeModelToFile
+    writeModelToFile,
+    main
 } from '../src/index'
 
 describe('cli', () => {
@@ -96,5 +97,52 @@ describe('cli', () => {
             expect(console.error).toHaveBeenCalledWith(new Error('borked'))
 
         })
+    })
+
+    describe('command line arguments', () => {
+        test('-v and --version should print the version', () => {
+      
+            console.log = jest.fn()
+
+            let args: any;
+
+            // smodg -v
+            args = {_: [], v: true}
+            main(args)
+            expect(console.log).toHaveBeenCalledWith('smodg v1.2.3')
+
+            jest.resetAllMocks()
+
+            // smodg --version
+            args = {_: [], version: true}
+            main(args)
+            expect(console.log).toHaveBeenCalledWith('smodg v1.2.3')
+
+        })
+
+        test('-h and --help should print helptext', () => {
+
+            console.log = jest.fn()
+
+            let args: any;
+
+            // smodg -h
+            args = {_: [], h: true}
+            main(args)
+            expect(console.log).toHaveBeenCalled()
+
+            jest.resetAllMocks()
+
+            // smodg --help
+            args = {_: [], help: true}
+            main(args)
+            expect(console.log).toHaveBeenCalled()
+        })
+        
+        test('-m and --migration should trigger a migration generation', () => {})
+        test('-s and --schema should set a schema name', () => {})
+        test('-o and --outputDir should set the output directory', () => {})
+        test('should pass filepath to readFileSync', () => {})
+        test('should probably be implemented differently because these tests are getting wacky', () => {})
     })
 })
