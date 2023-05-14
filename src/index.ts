@@ -89,7 +89,7 @@ const writeMigrationToFile = (migration: string, options: {modelName: string}) =
     }
 
     try {
-        fs.writeFileSync(`./src/migrations/${dateFormatString()}-Create-Table-${options.modelName}.ts`)
+        fs.writeFileSync(`./src/migrations/${dateFormatString()}-Create-Table-${options.modelName}.ts`, migration)
     } catch(error) {
         console.error(error)
     }
