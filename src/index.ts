@@ -7,7 +7,14 @@ import { modelTemplate, migrationTemplate } from './templates';
 import { kebabCase } from './formatters';
 
 const main = () => {
-    const args = minimist(process.argv.slice(2)) 
+
+    const args = minimist(process.argv.slice(2), {
+        stopEarly: true,
+        boolean: true
+    }) 
+    
+    console.log(args)
+
     const filePath = args._[0] 
 
     let generateMigrationFile = false
@@ -24,7 +31,7 @@ const main = () => {
         return
     }
 
-    if(args.m || args.migration){
+    if(args.migration){
         generateMigrationFile = true
     }
 
@@ -122,11 +129,17 @@ Usage:
 
 Options:
 
-    -h, --help        show help
-    -m, --migration   create an Umzug migration. default: false
-    -o, --outputDir   model output directory, relative to current path. default: "src/models"
-    -s, --schema      specify a schema. default: none 
-    -v, --version     print installed version
+    --help, -h          show help
+    
+    --migration         create an Umzug migration. default: false
+   
+    --outputDir=PATH,   model output directory, relative to current path. default: "src/models"
+        -o PATH         
+    
+    --schema=NAME       specify a schema. default is no schema 
+        -s NAME
+    
+    --version, -v       print installed version
 ` 
 
     console.log(helpText)
