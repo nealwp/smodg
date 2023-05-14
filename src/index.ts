@@ -5,18 +5,12 @@ import minimist from 'minimist';
 import { generateModelInputs } from './parser';
 import { modelTemplate, migrationTemplate } from './templates';
 import { kebabCase } from './formatters';
+import { version } from '../package.json'
 
-const main = () => {
-
-    const args = minimist(process.argv.slice(2), {
-        stopEarly: true,
-        boolean: true
-    }) 
+export const main = (args: minimist.ParsedArgs) => {
     
-    console.log(args)
-
     const filePath = args._[0] 
-
+    
     let generateMigrationFile = false
     let schema = ""    
     let outputDir = 'src/models'
@@ -76,7 +70,7 @@ const main = () => {
         
 }
 
-const writeModelToFile = (model: string, options: {outputDir: string, modelName: string}) => {
+export const writeModelToFile = (model: string, options: {outputDir: string, modelName: string}) => {
     
     if (!fs.existsSync(`./${options.outputDir}`)) {
         fs.mkdirSync(`./${options.outputDir}`)
@@ -115,7 +109,7 @@ const dateFormatString = () => {
     return `${year}.${month}.${day}T${hours}.${minutes}.${seconds}`;
 }
 
-const printHelp = () => {
+export const printHelp = () => {
     const helpText = `
 =================================
     Sequelize Model Generator    
@@ -145,9 +139,14 @@ Options:
     console.log(helpText)
 }
 
-const printVersion = () => {
-    const packageVersion = require('./package.json').version
-    console.log(packageVersion)
+export const printVersion = () => {
+    console.log(`smodg v${version}`)
 }
 
-main()
+
+const args = minimist(process.argv.slice(2), {
+    stopEarly: true,
+    boolean: true
+}) 
+
+main(args)
