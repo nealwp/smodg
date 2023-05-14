@@ -1,4 +1,10 @@
-import { generateModel, readTokensFromSource, parseTypeObjects, getSequelizeType, generateColumnDefinition } from '../src/parser'
+import { 
+    readTokensFromSource,
+	parseTypeObjects,
+	getSequelizeType,
+	generateTableDefinition,
+	generateModelInputs
+} from '../src/parser'
 
 describe('parser', () => {
 
@@ -74,47 +80,6 @@ describe('parser', () => {
         })
     })
 
-    describe('generateModel', () => {
-        test('should return a sequelize model', () => {
-            const fileContent = `export type SmallTest = {
-                name: string;
-            }`
-
-            const expectedOutput = `\n\t@Column(columnDefinition.name)\n\tname!: string\n`
-
-            const result = generateModel(fileContent)
-
-            expect(result).toEqual(expectedOutput)
-        })
-        test('should handle a multiple properties', () => {
-            const fileContent = `export type SmallTest = {
-                name: string;
-                anotherName: string;
-            }`
-
-            const expectedOutput = `\n\t@Column(columnDefinition.name)\n\tname!: string\n\n\t@Column(columnDefinition.anotherName)\n\tanotherName!: string\n`
-
-            const result = generateModel(fileContent)
-
-            expect(result).toEqual(expectedOutput)
-        })
-    })
-
-
-    describe('generateColumnDefinition', () => {
-        test('should return column definition', () => {
-            const fileContent = `export type SmallTest = {
-                name: string;
-                anotherName: string;
-            }`
-
-            const expectedOuput = `\tname: {\n\t\tfield: 'name',\n\t\ttype: DataType.STRING\n\t},\n\tanotherName: {\n\t\tfield: 'another_name',\n\t\ttype: DataType.STRING\n\t},\n`
-            const result = generateColumnDefinition(fileContent)
-            expect(result).toEqual(expectedOuput)
-
-        })
-    })
-
     describe('getSequelizeType', () => {
         test('should return STRING for string', () => {
             const result = getSequelizeType('string')
@@ -130,7 +95,72 @@ describe('parser', () => {
         })
         test('should return DECIMAL for number', () => {
             const result = getSequelizeType('number')
-            expect(result).toEqual('DECIMAL')
+            expect(result).toEqual('FLOAT')
+        })
+        test('should return undefined for unknown type', () => {
+            const result = getSequelizeType('FooBar')
+            expect(result).toBe(undefined)
+        })
+    })
+
+    describe('generateTableDefinition', () => {
+        test('should return a table def string with no schema if schema is blank', () => {
+            const expected = `\ttableName: 'my_model', `
+            const result = generateTableDefinition("MyModel", "")
+            expect(result).toEqual(expected)
+        })
+        test('should return a table def string with schema if schema is not blank', () => {
+            const expected = `\ttableName: 'my_model', \n\tschema: 'my_schema',`
+            const result = generateTableDefinition("MyModel", "MySchema")
+            expect(result).toEqual(expected)
+        })
+    })
+
+    describe('generateModelInputs', () => {
+        test('should return the model name', () => {
+            const fileContent = `export type SmallTest = {
+                name: string;
+                anotherName: string;
+            }`
+
+            const result = generateModelInputs(fileContent, '')
+            expect(result.modelName).toEqual('SmallTest')
+        })
+
+        test('should return the table definition', () => {
+            const fileContent = `export type SmallTest = {
+                name: string;
+                anotherName: string;
+            }`
+
+            const expected = `\ttableName: 'small_test', `
+
+            const result = generateModelInputs(fileContent, '')
+            expect(result.tableDefinition).toEqual(expected)
+        })
+
+        test('should return the column definitions', () => {
+           const fileContent = `export type SmallTest = {
+                name: string;
+                anotherName: string;
+            }`
+
+            const expected = `\tname: {\n\t\tfield: 'name',\n\t\ttype: DataType.STRING\n\t},\n\tanotherName: {\n\t\tfield: 'another_name',\n\t\ttype: DataType.STRING\n\t},\n`
+            const result = generateModelInputs(fileContent, '')
+            expect(result.columnDefinitions).toEqual(expected)
+
+        })
+
+        test('should return column decorators', () => {
+            const fileContent = `export type SmallTest = {
+                name: string;
+                anotherName: string;
+            }`
+
+            const expected = `\n\t@Column(columnDefinition.name)\n\tname!: string\n\n\t@Column(columnDefinition.anotherName)\n\tanotherName!: string\n`
+            const result = generateModelInputs(fileContent, '')
+
+            expect(result.columnDecorators).toEqual(expected)
         })
     })
 })

@@ -1,13 +1,4 @@
 
-export type ModelTemplateInput = {
-    modelName: string,
-    tableDefinition: string,
-    columnDefinitions: string,
-    columnDecorators: string
-}
-
-export const modelTemplate = (input: ModelTemplateInput) => {
-    return `
 import {
     Column,
     Table,
@@ -19,12 +10,12 @@ import {
     HasMany,
 } from 'sequelize-typescript';
 
-import { ${input.modelName} as ${input.modelName}Type } from '@_YOUR_TYPES'
+import {  as Type } from '@_YOUR_TYPES'
 import { ModelAttributeColumnOptions } from 'sequelize';
 
-interface ${input.modelName}CreationAttributes extends ${input.modelName}Type {}
+interface CreationAttributes extends Type {}
 
-interface ${input.modelName}Attributes extends ${input.modelName}CreationAttributes {
+interface Attributes extends CreationAttributes {
     id: number;
     createdBy: string;
     createdDate: Date;
@@ -32,24 +23,24 @@ interface ${input.modelName}Attributes extends ${input.modelName}CreationAttribu
     updatedDate: Date;
 }
 
-type ${input.modelName}Keys = keyof ${input.modelName}Attributes
+type Keys = keyof Attributes
 
 interface ColumnOptions extends ModelAttributeColumnOptions {
     field: string
 }
 
 export const tableDefinition = {
-${input.tableDefinition}
+	tableName: '', 
 }
 
-export const columnDefinition: Record<${input.modelName}Keys, ColumnOptions> = {
+export const columnDefinition: Record<Keys, ColumnOptions> = {
     id: {
         field: "id",
         type: DataType.INTEGER,
         primaryKey: true,
         autoIncrement: true,
     },   
-${input.columnDefinitions}
+
     createdBy: {
         field: "created_by",
         type: DataType.STRING,
@@ -69,12 +60,12 @@ ${input.columnDefinitions}
 }
 
 @Table(tableDefinition)
-export class ${input.modelName} 
-extends Model<${input.modelName}Attributes, ${input.modelName}CreationAttributes>
-implements ${input.modelName}Attributes {
+export class  
+extends Model<Attributes, CreationAttributes>
+implements Attributes {
     @Column(columnDefinition.id)
     id!: number;
-${input.columnDecorators}
+
     @Column(columnDefinition.createdBy)
     createdBy!: string;
 
@@ -89,5 +80,4 @@ ${input.columnDecorators}
     @Column(columnDefinition.updatedDate)
     updatedDate!: Date;
 }
-    `
-}
+    
