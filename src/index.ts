@@ -5,7 +5,8 @@ import minimist from 'minimist';
 import { generateModelInputs } from './parser';
 import { modelTemplate, migrationTemplate } from './templates';
 import { kebabCase } from './formatters';
-import { version } from '../package.json'
+
+const version = "1.1.2"
 
 export const main = (args: minimist.ParsedArgs) => {
     
