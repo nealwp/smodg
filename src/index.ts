@@ -26,7 +26,7 @@ export const main = (args: minimist.ParsedArgs) => {
         return
     }
 
-    if(args.m || args.migration){
+    if(args.migration){
         generateMigrationFile = true
     }
 
@@ -63,7 +63,7 @@ export const main = (args: minimist.ParsedArgs) => {
             }
 
             const migration = migrationTemplate(migrationInputs)
-            //writeMigrationToFile(migration)
+            writeMigrationToFile(migration, {modelName: modelInputs.modelName})
         }
     } catch(error) {
         console.error(error)
@@ -84,6 +84,32 @@ export const writeModelToFile = (model: string, options: {outputDir: string, mod
     }
 }
 
+const writeMigrationToFile = (migration: string, options: {modelName: string}) => {
+     
+    if (!fs.existsSync(`./src/migrations`)) {
+        fs.mkdirSync(`./src/migrations`)
+    }
+
+    try {
+        fs.writeFileSync(`./src/migrations/${dateFormatString()}-Create-Table-${options.modelName}.ts`, migration)
+    } catch(error) {
+        console.error(error)
+    }
+}
+
+
+const dateFormatString = () => {
+    const currentDate = new Date();
+    const year = currentDate.getFullYear();
+    const month = String(currentDate.getMonth() + 1).padStart(2, '0');
+    const day = String(currentDate.getDate()).padStart(2, '0');
+    const hours = String(currentDate.getHours()).padStart(2, '0');
+    const minutes = String(currentDate.getMinutes()).padStart(2, '0');
+    const seconds = String(currentDate.getSeconds()).padStart(2, '0');
+
+    return `${year}.${month}.${day}T${hours}.${minutes}.${seconds}`;
+}
+
 export const printHelp = () => {
     const helpText = `
 =================================
@@ -98,11 +124,17 @@ Usage:
 
 Options:
 
-    -h, --help        show help
-    -m, --migration   create an Umzug migration. default: false
-    -o, --outputDir   model output directory, relative to current path. default: "src/models"
-    -s, --schema      specify a schema. default: none 
-    -v, --version     print installed version
+    --help, -h          show help
+    
+    --migration         create an Umzug migration. default: false
+   
+    --outputDir=PATH,   model output directory, relative to current path. default: "src/models"
+        -o PATH         
+    
+    --schema=NAME       specify a schema. default is no schema 
+        -s NAME
+    
+    --version, -v       print installed version
 ` 
 
     console.log(helpText)
@@ -113,6 +145,9 @@ export const printVersion = () => {
 }
 
 
-const args = minimist(process.argv.slice(2)) 
+const args = minimist(process.argv.slice(2), {
+    stopEarly: true,
+    boolean: true
+}) 
 
 main(args)
