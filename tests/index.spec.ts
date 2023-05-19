@@ -18,7 +18,7 @@ describe('cli', () => {
         test('should print the current app version', () => {
             console.log = jest.fn()
             printVersion()
-            expect(console.log).toHaveBeenCalledWith('smodg v1.2.3')
+            expect(console.log).toHaveBeenCalledWith('smodg v1.1.2')
         })
     })
     describe('printHelp', () => {
@@ -109,14 +109,14 @@ describe('cli', () => {
             // smodg -v
             args = {_: [], v: true}
             main(args)
-            expect(console.log).toHaveBeenCalledWith('smodg v1.2.3')
+            expect(console.log).toHaveBeenCalledWith('smodg v1.1.2')
 
             jest.resetAllMocks()
 
             // smodg --version
             args = {_: [], version: true}
             main(args)
-            expect(console.log).toHaveBeenCalledWith('smodg v1.2.3')
+            expect(console.log).toHaveBeenCalledWith('smodg v1.1.2')
 
         })
 
