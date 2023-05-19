@@ -115,8 +115,8 @@ interface ColumnOptions extends ModelAttributeColumnOptions {
 }
 
 export const tableDefinition = {
-        tableName: 'user_account',
-        schema: 'application_access',
+    tableName: 'user_account',
+    schema: 'application_access',
 }
 
 export const columnDefinition: Record<UserAccountKeys, ColumnOptions> = {
