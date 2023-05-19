@@ -208,8 +208,8 @@ import { DataType } from 'sequelize-typescript';
 import type { Migration } from '../db';
 
 const tableDefinition = {
-        tableName: 'user_account',
-        schema: 'application_access',
+    tableName: 'user_account',
+    schema: 'application_access',
 }
 
 const columnDefinition = {
