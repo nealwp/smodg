@@ -145,7 +145,7 @@ describe('parser', () => {
                 anotherName: string;
             }`
 
-            const expected = `\tname: {\n\tfield: 'name',\n\ttype: DataType.STRING\n\t},\n\tanotherName: {\n\tfield: 'another_name',\n\ttype: DataType.STRING\n\t},\n`
+            const expected = `\tname: {\n\t\tfield: 'name',\n\t\ttype: DataType.STRING\n\t},\n\tanotherName: {\n\t\tfield: 'another_name',\n\t\ttype: DataType.STRING\n\t},\n`
             const result = generateModelInputs(fileContent, '')
             expect(result.columnDefinitions).toEqual(expected)
 
