@@ -8,9 +8,12 @@
 ## Installation
 
 ```bash
-npm i -g smodg
+npm install -g smodg@latest
 ```
-
+or
+```bash
+npx smodg@latest 
+```
 ## Usage
 
 ```
