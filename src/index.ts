@@ -6,7 +6,7 @@ import { generateModelInputs } from './parser';
 import { modelTemplate, migrationTemplate } from './templates';
 import { kebabCase } from './formatters';
 
-const version = "1.1.2"
+const version = require('../package.json').version
 
 export const main = (args: minimist.ParsedArgs) => {
     
