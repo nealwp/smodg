@@ -3,24 +3,16 @@ const fs = require('node:fs')
 jest.mock('node:fs')
 
 jest.mock('../package.json', () => ({
-    version: '1.2.3'
+    version: '99.99.99'
 }), {virtual: true})
 
 import {
-    printVersion,
     printHelp,
     writeModelToFile,
     main
 } from '../src/index'
 
 describe('cli', () => {
-    describe('printVersion', () => {
-        test('should print the current app version', () => {
-            console.log = jest.fn()
-            printVersion()
-            expect(console.log).toHaveBeenCalledWith('smodg v1.1.2')
-        })
-    })
     describe('printHelp', () => {
         test('should print help text', () => {
             console.log = jest.fn()
@@ -109,14 +101,14 @@ describe('cli', () => {
             // smodg -v
             args = {_: [], v: true}
             main(args)
-            expect(console.log).toHaveBeenCalledWith('smodg v1.1.2')
+            expect(console.log).toHaveBeenCalledWith('smodg v99.99.99')
 
             jest.resetAllMocks()
 
             // smodg --version
             args = {_: [], version: true}
             main(args)
-            expect(console.log).toHaveBeenCalledWith('smodg v1.1.2')
+            expect(console.log).toHaveBeenCalledWith('smodg v99.99.99')
 
         })
 

@@ -2,11 +2,20 @@
 
 import fs from 'node:fs'
 import minimist from 'minimist';
+import path from 'path';
 import { generateModelInputs } from './parser';
 import { modelTemplate, migrationTemplate } from './templates';
 import { kebabCase } from './formatters';
 
-const version = "1.1.2"
+let packageJsonPath: string;
+
+if (process.env.NODE_ENV === 'development' || process.env.NODE_ENV === 'test') {
+    packageJsonPath = path.resolve(__dirname, '..', 'package.json');
+} else {
+    packageJsonPath = path.resolve(__dirname, 'package.json');
+}
+
+const version = require(packageJsonPath).version
 
 export const main = (args: minimist.ParsedArgs) => {
     
