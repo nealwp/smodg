@@ -3,7 +3,8 @@ export type ModelTemplateInput = {
     modelName: string,
     tableDefinition: string,
     columnDefinitions: string,
-    columnDecorators: string
+    columnDecorators: string,
+    typeDefinition: string
 }
 
 export const modelTemplate = (input: ModelTemplateInput) => {
@@ -19,8 +20,9 @@ import {
     HasMany,
 } from 'sequelize-typescript';
 
-import { ${input.modelName} as ${input.modelName}Type } from '@_YOUR_TYPES'
 import { ModelAttributeColumnOptions } from 'sequelize';
+
+${input.typeDefinition}
 
 interface ${input.modelName}CreationAttributes extends ${input.modelName}Type {}
 

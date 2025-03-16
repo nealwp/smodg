@@ -1,6 +1,6 @@
 {
   "name": "smodg",
-  "version": "1.3.0",
+  "version": "1.4.0",
   "description": "Generate basic Sequelize models from TypeScript declaration files",
   "main": "index.js",
   "bin": {
@@ -13,6 +13,7 @@
     "test": "jest",
     "test:watch": "jest --watch",
     "dev": "node ./dist/index.js",
+    "check": "tsc --noEmit", 
     "build": "rimraf ./dist && npx tsc && copyfiles package.json README.md LICENSE dist/"
   },
   "repository": {
